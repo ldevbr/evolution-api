@@ -1,7 +1,9 @@
 services:
   api:
     container_name: evolution_api
-    image: evoapicloud/evolution-api:latest
+    build:
+      context: ./evolution-api
+      dockerfile: Dockerfile
     restart: always
     depends_on:
       - redis
