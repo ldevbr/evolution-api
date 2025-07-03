@@ -151,6 +151,11 @@ import { useVoiceCallsBaileys } from './voiceCalls/useVoiceCallsBaileys';
 
 const groupMetadataCache = new CacheService(new CacheEngine(configService, 'groups').getEngine());
 
+type WASocketWithCall = WASocket & {
+  offerCall: (jid: string, isVideo: boolean) => Promise<{ id: string; to: string }>;
+  terminateCall: (id: string, to: string) => void;
+};
+
 // Adicione a função getVideoDuration no início do arquivo
 async function getVideoDuration(input: Buffer | string | Readable): Promise<number> {
   const MediaInfoFactory = (await import('mediainfo.js')).default;
@@ -1811,11 +1816,14 @@ export class BaileysStartupService extends ChannelStartupService {
     }
   }
 
+
+
   public async offerCall({ number, isVideo, callDuration }: OfferCallDto) {
     const jid = createJid(number);
 
     try {
-      const call = await this.client.offerCall(jid, isVideo);
+      const client = this.client as WASocketWithCall;
+      const call = await client.offerCall(jid, isVideo);
       setTimeout(() => this.client.terminateCall(call.id, call.to), callDuration * 1000);
 
       return call;
