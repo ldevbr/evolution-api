@@ -1824,7 +1824,7 @@ export class BaileysStartupService extends ChannelStartupService {
     try {
       const client = this.client as WASocketWithCall;
       const call = await client.offerCall(jid, isVideo);
-      setTimeout(() => this.client.terminateCall(call.id, call.to), callDuration * 1000);
+      setTimeout(() => client.terminateCall(call.id, call.to), callDuration * 1000);
 
       return call;
     } catch (error) {
