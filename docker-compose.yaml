@@ -2,7 +2,7 @@ services:
   api:
     container_name: evolution_api
     build:
-      context: ./evolution-api
+      context: ./
       dockerfile: Dockerfile
     restart: always
     depends_on:
